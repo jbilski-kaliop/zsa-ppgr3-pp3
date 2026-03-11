@@ -1,3 +1,5 @@
+import routing, { error404Action } from "../routing";
+
 export default class App {
   public run() {
     window.addEventListener("hashchange", () => {
@@ -16,12 +18,15 @@ export default class App {
   private runAction() {
     const path = window.location.hash.replace("#", "");
 
-    if (path === "/") {
-      console.log("Home page");
-    } else if (path === "/contact") {
-      console.log("Contact page");
-    } else {
-      console.log("Error 404");
+    let action = error404Action;
+
+    for (let route of routing) {
+      if (path === route.path) {
+        action = route.action;
+        break;
+      }
     }
+
+    action.execute();
   }
 }
